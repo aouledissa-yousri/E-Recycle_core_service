@@ -16,6 +16,7 @@ Web service that holds all the core functionalities of the "E-Recycle" informati
     1.1. source <Current-working-directory>/local/bin
 
 2. Windows: 
+
     2.1. <Current-working-directory>\Scripts\activate
 
 # Run django server 
