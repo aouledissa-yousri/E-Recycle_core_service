@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
+    'UserManagement'
 ]
 
 MIDDLEWARE = [
@@ -75,8 +77,16 @@ WSGI_APPLICATION = 'global.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db.sqlite3'
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd7hadr5l5lgttv',
+        'USER': 'sxmpftinlcnchf',
+        'PASSWORD': '854188ea50a4ace2c465098aa6c690ef8fdf5fcc1c3d44b10772b7778084c1c9',
+        'HOST': 'ec2-54-82-205-3.compute-1.amazonaws.com',
+        'PORT': '5432'
+
     }
 }
 
