@@ -5,8 +5,7 @@ Web service that holds all the core functionalities of the "E-Recycle" informati
 
 # Install 
 
-1. git clone <Repository link>
-1. python manage-py runserver <port-number (optional)>
+1. git clone <Repository-link .>
 2. virtualenv <Current working directory >
 
 
