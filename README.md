@@ -5,19 +5,19 @@ Web service that holds all the core functionalities of the "E-Recycle" informati
 
 # Install 
 
-1. git clone <Repository-link>
-2. virtualenv <Current-working-directory>
+1. git clone <Repository-link >
+2. virtualenv <Current-working-directory >
 
 
 # Activate virtual environment to run server
 
 1. Linux (any distro): 
 
-    1.1. source <Current-working-directory>/local/bin
+    1.1. source <Current-working-directory >/local/bin
 
 2. Windows: 
 
-    2.1. <Current-working-directory>\Scripts\activate
+    2.1. <Current-working-directory >\Scripts\activate
 
 # Run django server 
 
