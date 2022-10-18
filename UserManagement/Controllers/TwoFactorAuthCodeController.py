@@ -5,7 +5,7 @@ from UserManagement.serializers import *
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives, EmailMessage
-from Test.settings import EMAIL_HOST_USER
+from Global.settings import EMAIL_HOST_USER
 from ..extra import generateExpirationDate
 
 

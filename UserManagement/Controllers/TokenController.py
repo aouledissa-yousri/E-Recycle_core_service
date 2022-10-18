@@ -1,9 +1,10 @@
 from ..models.Token import Token
 from ..serializers import TokenSerializer
-from Test.settings import SECRET_KEY
+from Global.settings import SECRET_KEY
 import jwt
 
 class TokenController: 
+    
 
     #save access token in database
     @staticmethod

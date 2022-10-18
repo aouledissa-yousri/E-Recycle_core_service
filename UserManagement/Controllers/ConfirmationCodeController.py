@@ -5,7 +5,7 @@ from UserManagement.serializers import ConfirmationCodeSerializer
 from django.template.loader import render_to_string
 from ..models.ConfirmationCode import ConfirmationCode
 from ..models.GenericUser import GenericUser
-from Test.settings import EMAIL_HOST_USER
+from Global.settings import EMAIL_HOST_USER
 from ..extra import generateCode, generateExpirationDate
 
 
