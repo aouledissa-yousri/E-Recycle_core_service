@@ -26,6 +26,10 @@ urlpatterns = [
     path("changePassword/", CitizenController.changePassword),
 
 
+    path("googleLoginGateway/", CitizenController.googleLoginGateway),
+    path("googleLogin/", CitizenController.googleLogin),
+
+
 
 
 

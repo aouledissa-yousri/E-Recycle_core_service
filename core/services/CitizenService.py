@@ -1,9 +1,9 @@
 from threading import Thread
 from core.models import Citizen
 from core.helpers import RequestHelper, CodeHelper, CredentialsHelper, HashHelper
-from UserManagement.models import GenericUser, ConfirmationCode, User, Token, TwoFactorAuthCode, PasswordResetCode
+from UserManagement.models import GenericUser, ConfirmationCode, User, Token, TwoFactorAuthCode, PasswordResetCode, GoogleUser
 from UserManagement.serializers import ConfirmationCodeSerializer, TwoFactorAuthCodeSerializer, PasswordResetCodeSerializer
-from UserManagement.Controllers import TokenController
+from UserManagement.Controllers import TokenController, GoogleUserController
 from Global.settings import EMAIL_HOST_USER
 from django.core.mail import EmailMessage
 from django.utils import timezone
@@ -386,7 +386,44 @@ class CitizenService:
         
         except GenericUser.DoesNotExist:
             return {"message": "User not found"}
+    
 
+
+    #redirect to google login page
+    def googleLoginGateway():
+        return GoogleUserController.googleLoginGateway()
+    
+
+    #google login 
+    def googleLogin(request):
+        googleUserData =  GoogleUserController.googleLogin(request)
+
+
+        #seperate google account username to name and lastname 
+        googleUserData["name"] = googleUserData["user"]["username"].split(" ")[0]
+        googleUserData["lastname"] = googleUserData["user"]["username"].split(" ")[1]
+
+
+        citizen = Citizen()
+        citizen.setData({
+            "user" : GoogleUser.objects.get(username = googleUserData["user"]["username"]),
+            "name": googleUserData["name"],
+            "lastname": googleUserData["lastname"]
+        })
+
+        citizen.save()
+
+
+        return {
+            "message": "success",
+            "user": citizen.getData(),
+            "token": googleUserData["token"]
+        }
+    
+    
+
+
+    
 
         
 

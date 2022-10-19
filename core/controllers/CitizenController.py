@@ -80,7 +80,17 @@ class CitizenController:
     @api_view(["PATCH"])
     @checkAccessToken
     def changePassword(request):  
-        return JsonResponse(CitizenService.changePassword(request))      
+        return JsonResponse(CitizenService.changePassword(request))
+
+
+    @api_view(["GET"])
+    def googleLoginGateway(request):
+        return JsonResponse(CitizenService.googleLoginGateway()) 
+    
+
+    @api_view(["GET"])
+    def googleLogin(request):
+        return JsonResponse(CitizenService.googleLogin(request))
     
     
     

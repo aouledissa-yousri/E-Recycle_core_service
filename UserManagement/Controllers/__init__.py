@@ -1,3 +1,4 @@
 from .GenericUserController import GenericUserController
 from .TokenController import TokenController
 from .LocationController import LocationController
+from .GoogleUserController import GoogleUserController

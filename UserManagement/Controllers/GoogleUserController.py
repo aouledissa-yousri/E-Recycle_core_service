@@ -1,4 +1,3 @@
-
 from google_auth_oauthlib.flow import Flow
 from google.oauth2 import id_token
 from pip._vendor import cachecontrol
@@ -66,10 +65,10 @@ class GoogleUserController:
 
     #prepare google login parameters 
     def googleAuthFlow(client_secret_path):
+        print(GoogleUserController.redirect_url)
         return Flow.from_client_secrets_file(
             client_secrets_file = client_secret_path,
             scopes=['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile', 'openid'],
-            #redirect_uri= 'http://127.0.0.1:8000/manageUser/googleLogin'
             redirect_uri = GoogleUserController.redirect_url
         )
 
