@@ -46,7 +46,7 @@ class FacebookUserController:
 
         #get authorization code from authorization url
         FacebookUserController.authCode = request.build_absolute_uri().split("?")[1].split("&")[0].split("=")[1]
-        return redirect("/manageUser/facebookLogin/")
+        return redirect("/core/facebookLogin/")
     
 
     @staticmethod 
@@ -133,7 +133,7 @@ class FacebookUserController:
         FacebookUserController.authCode = "Exchanged"
 
 
-        return redirect("/manageUser/facebookLogin/")
+        return redirect("/core/facebookLogin/")
 
        
 

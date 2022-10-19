@@ -3,7 +3,7 @@ from core.models import Citizen
 from core.helpers import RequestHelper, CodeHelper, CredentialsHelper, HashHelper
 from UserManagement.models import GenericUser, ConfirmationCode, User, Token, TwoFactorAuthCode, PasswordResetCode, GoogleUser
 from UserManagement.serializers import ConfirmationCodeSerializer, TwoFactorAuthCodeSerializer, PasswordResetCodeSerializer
-from UserManagement.Controllers import TokenController, GoogleUserController
+from UserManagement.Controllers import TokenController, GoogleUserController, FacebookUserController
 from Global.settings import EMAIL_HOST_USER
 from django.core.mail import EmailMessage
 from django.utils import timezone
@@ -420,6 +420,37 @@ class CitizenService:
             "token": googleUserData["token"]
         }
     
+
+    #redirect to facebook login page
+    def facebookLoginGateway():
+        return FacebookUserController.facebookLoginGateway()
+    
+
+    #facebook login
+    def facebookLogin(request):
+        facebookUserData = FacebookUserController.facebookLogin(request)
+        print(facebookUserData)
+
+        #seperate google account username to name and lastname 
+        facebookUserData["name"] = facebookUserData["user"]["username"].split(" ")[0]
+        facebookUserData["lastname"] = facebookUserData["user"]["username"].split(" ")[1]
+
+
+        citizen = Citizen()
+        citizen.setData({
+            "user" : GoogleUser.objects.get(username = facebookUserData["user"]["username"]),
+            "name": facebookUserData["name"],
+            "lastname": facebookUserData["lastname"]
+        })
+
+        citizen.save()
+
+
+        return {
+            "message": "success",
+            "user": citizen.getData(),
+            "token": facebookUserData["token"]
+        }
     
 
 
