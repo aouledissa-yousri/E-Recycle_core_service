@@ -9,10 +9,12 @@ urlpatterns = [
     path("signUp/", CitizenController.signUp),
     path("login/", CitizenController.login),
     path("confirmAccount/", CitizenController.confirmAccount),
+    path("logout/", CitizenController.logout),
+    path("logoutAllSessions/", CitizenController.logoutAllSessions),
+    path("logoutAllOtherSessions/", CitizenController.logoutAllOtherSessions),
 
 
 
 
-    # material controller paths
-    path("addMaterial/", MaterialController.addMaterial)
+    
 ]

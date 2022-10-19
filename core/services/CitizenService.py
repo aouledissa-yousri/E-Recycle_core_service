@@ -1,7 +1,7 @@
 from threading import Thread
 from core.models import Citizen
 from core.helpers import RequestHelper, CodeHelper, CredentialsHelper, HashHelper
-from UserManagement.models import GenericUser, ConfirmationCode, User
+from UserManagement.models import GenericUser, ConfirmationCode, User, Token
 from UserManagement.serializers import ConfirmationCodeSerializer
 from UserManagement.Controllers import TokenController
 from Global.settings import EMAIL_HOST_USER
@@ -159,6 +159,42 @@ class CitizenService:
             return {"message": "invalid parameters"}
     
 
+
+    #log out 
+    @staticmethod 
+    def logout(request):
+        TokenController.deleteToken(request.headers["Token"])
+        return {"message": "logged out"}
+
+
+    #logout from all sessions 
+    @staticmethod 
+    def logoutAllSessions(request):
+        decodedToken = TokenController.decodeToken(request.headers["Token"])
+
+        try: 
+            user = User.objects.get(id = decodedToken["id"])
+            Token.objects.filter(user_id = user.id).delete()
+            return {"message": "logged out from all sessions"}
+        
+        except User.DoesNotExist: 
+            return {"message": "user not found"}
+    
+
+    @staticmethod 
+    def logoutAllOtherSessions(request):
+        decodedToken = TokenController.decodeToken(request.headers["Token"]) 
+
+        try: 
+            user = User.objects.get(id = decodedToken["id"])
+            Token.objects.filter(user_id = user.id).exclude(token = request.headers["Token"]).delete()
+            return {"message": "logged out from all other sessions"}
+        
+        except User.DoesNotExist: 
+            return {"message": "user not found"}
+
+    
+
     @staticmethod
     def confirmAccount(request):
 
@@ -217,5 +253,7 @@ class CitizenService:
         TokenController.saveToken(token, account)
 
         return token
+    
+    
         
 
