@@ -56,11 +56,7 @@ class CitizenService:
             account = GenericUser.login(credentials)
 
 
-            #check if user account is not verfied
-            if not account.verified:
-                return CitizenService.sendConfirmationEmail(credentials.getData(), request)
             
-
             
 
             #check if username (or email) and password are correct get user data and access token 
@@ -69,8 +65,12 @@ class CitizenService:
                 #restart login authorized tries
                 account.restartTries()
 
+                #check if user account is not verfied
+                if not account.verified:
+                    return CitizenService.sendConfirmationEmail(credentials.getData(), request)
+
                 #check if two factor authentication is enabled
-                if account.twoFactorAuth: 
+                elif account.twoFactorAuth: 
                     return CitizenService.sendTwoFactorAuthCode(credentials.getData(), request)
             
 
