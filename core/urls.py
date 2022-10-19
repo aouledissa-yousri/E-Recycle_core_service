@@ -20,7 +20,10 @@ urlpatterns = [
     path("twoFactorAuth/", CitizenController.twoFactorAuth),
 
 
-    path("requestPasswordReset/", CitizenController.requestPasswordReset)
+    path("requestPasswordReset/", CitizenController.requestPasswordReset),
+    path("checkPasswordResetCode/", CitizenController.checkPasswordResetCode),
+    path("resetPassword/", CitizenController.resetPassword),
+    path("changePassword/", CitizenController.changePassword),
 
 
 

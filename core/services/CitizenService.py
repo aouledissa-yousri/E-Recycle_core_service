@@ -212,7 +212,6 @@ class CitizenService:
 
         twoFactorCode = TwoFactorAuthCode()
         twoFactorCode.setData(twoFactorAuthCode, GenericUser.objects.get(username = userProfile["username"]), CodeHelper.generateExpirationDate(request))
-        print(twoFactorCode.getData())
         twoFactorCode = TwoFactorAuthCodeSerializer(data = twoFactorCode.getData())
 
         if twoFactorCode.is_valid():
@@ -300,8 +299,7 @@ class CitizenService:
         
 
         return CitizenService.sendPasswordResetCode(user, request)
-        
-
+    
 
     @staticmethod 
     def sendPasswordResetCode(userProfile, request):
@@ -322,3 +320,73 @@ class CitizenService:
             return {"message": "Passoword reset code has been sent"}
 
         return {"message": "Password reset code has not been sent"}
+    
+
+
+    @staticmethod
+    def checkPasswordResetCode(request):
+        data = RequestHelper.getRequestBody(request)
+
+        try: 
+            passwordResetCode = PasswordResetCode.objects.get(code = data["code"])
+            if passwordResetCode.expirationDate >= timezone.now():
+                user = GenericUser.objects.get(user_ptr_id = passwordResetCode.user.id)
+                passwordResetCode.delete()
+                return {
+                    "message": "code is valid",
+                    "username": user.username,
+                    "email": user.email
+                }
+
+            return {"message": "Password reset code has been expired"}
+
+        except PasswordResetCode.DoesNotExist:
+            return {"message": "Passwored reset code is not valid"}
+        
+        except KeyError: 
+            return {"message": "Invalid parameters"}
+    
+
+    @staticmethod
+    def resetPassword(request):
+        data = RequestHelper.getRequestBody(request)
+
+        try: 
+            user = GenericUser.objects.get(username = data['username'])
+        
+        except GenericUser.DoesNotExist:
+            return {"message": "User does not exist"}
+        
+        except KeyError:
+
+            try: 
+                user = GenericUser.objects.get(username = data['email'])
+            
+            except GenericUser.DoesNotExist:
+                return {"message": "User does not exist"}
+            
+            except KeyError:
+
+                return {"message": "Invalid parameters"}
+        
+        user.changePassword(data['password'])
+        return {"message": "Password changed"}
+    
+
+    @staticmethod
+    def changePassword(request):
+        data = RequestHelper.getRequestBody(request)
+        userProfile = TokenController.decodeToken(request.headers["Token"])
+
+        try:
+            GenericUser.objects.get(username = userProfile["username"]).changePassword(data["password"])
+        
+        except GenericUser.DoesNotExist:
+            return {"message": "User not found"}
+
+
+        
+
+
+
+
