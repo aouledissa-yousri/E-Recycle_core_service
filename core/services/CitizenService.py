@@ -381,10 +381,6 @@ class CitizenService:
         userProfile = TokenController.decodeToken(request.headers["Token"])
 
         try:
-            user = GenericUser.objects.get(username = userProfile["username"])
-            print(user.salt)
-            print(user.password)
-            print("-----------------")
             GenericUser.objects.get(username = userProfile["username"]).changePassword(data["password"])
             return {"message": "Password has been changed"}
         
