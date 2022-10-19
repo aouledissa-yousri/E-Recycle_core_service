@@ -7,7 +7,7 @@ Web service that holds all the core functionalities of the "E-Recycle" informati
 
 1. git clone https://github.com/aouledissa-yousri/E-Recycle_core_service
 
-# Create virtual environment
+## Create virtual environment
 
 1. virtualenv $(pwd) (linux)
 2. virtualenv %cd% (windows)
