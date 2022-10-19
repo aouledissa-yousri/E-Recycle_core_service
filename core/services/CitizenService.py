@@ -61,9 +61,6 @@ class CitizenService:
                 return CitizenService.sendConfirmationEmail(credentials.getData(), request)
             
 
-            #check if two factor authentication is enabled
-            if account.twoFactorAuth: 
-                return CitizenService.sendTwoFactorAuthCode(credentials.getData(), request)
             
 
             #check if username (or email) and password are correct get user data and access token 
@@ -71,6 +68,11 @@ class CitizenService:
 
                 #restart login authorized tries
                 account.restartTries()
+
+                #check if two factor authentication is enabled
+                if account.twoFactorAuth: 
+                    return CitizenService.sendTwoFactorAuthCode(credentials.getData(), request)
+            
 
                 #create session and get citizen additional data
                 return CitizenService.fetchCitizenData(account)
@@ -379,7 +381,12 @@ class CitizenService:
         userProfile = TokenController.decodeToken(request.headers["Token"])
 
         try:
+            user = GenericUser.objects.get(username = userProfile["username"])
+            print(user.salt)
+            print(user.password)
+            print("-----------------")
             GenericUser.objects.get(username = userProfile["username"]).changePassword(data["password"])
+            return {"message": "Password has been changed"}
         
         except GenericUser.DoesNotExist:
             return {"message": "User not found"}

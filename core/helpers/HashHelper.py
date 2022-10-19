@@ -15,5 +15,5 @@ class HashHelper:
 
     #encrypt password using hash and salt
     @staticmethod
-    def encryptPassword(hashedPassword: str, salt: str):
-        return hashlib.sha512(str(HashHelper.hashPassword(hashedPassword) + salt).encode("UTF-8")).hexdigest()
+    def encryptPassword(password: str, salt: str):
+        return hashlib.sha512(str(HashHelper.hashPassword(password) + salt).encode("UTF-8")).hexdigest()

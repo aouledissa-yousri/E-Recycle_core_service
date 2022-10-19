@@ -72,6 +72,10 @@ class GenericUser(User, models.Model):
         self.salt = randomSalt(random.randint(1, 100))
         self.password = encryptPassword(password, self.salt)
         GenericUser.objects.filter(id = self.id).update(password = self.password, salt = self.salt)
+        print("-----------------")
+        print(self.salt)
+        print(self.password)
+
     
     def updateUsername(self, username):
         self.username = username 
