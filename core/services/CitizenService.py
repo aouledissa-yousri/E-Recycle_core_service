@@ -199,7 +199,6 @@ class CitizenService:
     def confirmAccount(request):
 
         data = RequestHelper.getRequestBody(request)
-        #user = GenericUser.objects.get(username = data["username"])
 
         try:
             confirmationCode = ConfirmationCode.objects.get(code = data["code"])
@@ -213,6 +212,28 @@ class CitizenService:
 
         except ConfirmationCode.DoesNotExist:
             return {"message": "Confirmation code is not valid"}
+        
+        except KeyError: 
+            return {"message": "Invalid parameters"}
+        
+    
+    #enable two factor authentication
+    @staticmethod 
+    def manageTwoFactorAuth(request):
+        data = TokenController.decodeToken(request.headers["Token"])
+
+        #search for user 
+        try: 
+            if "enableTwoFactorAuth" in request.path:
+                GenericUser.objects.filter(username = data["username"]).update(twoFactorAuth = True)
+                return {"message": "Two factor authentication enabled"}
+
+            elif "disableTwoFactorAuth" in request.path:
+                GenericUser.objects.filter(username = data["username"]).update(twoFactorAuth = False)
+                return {"message": "Two factor authentication disabled"}
+        
+        except GenericUser.DoesNotExist: 
+            return {"message": "user does not exist"}
         
         except KeyError: 
             return {"message": "Invalid parameters"}

@@ -12,6 +12,8 @@ urlpatterns = [
     path("logout/", CitizenController.logout),
     path("logoutAllSessions/", CitizenController.logoutAllSessions),
     path("logoutAllOtherSessions/", CitizenController.logoutAllOtherSessions),
+    path("enableTwoFactorAuth/", CitizenController.enableTwoFactorAuth),
+    path("disableTwoFactorAuth/", CitizenController.disableTwoFactorAuth)
 
 
 
