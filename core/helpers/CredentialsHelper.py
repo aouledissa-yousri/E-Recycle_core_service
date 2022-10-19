@@ -6,7 +6,6 @@ class CredentialsHelper:
         try:
             self.username = data["username"]
             self.email = data["email"]
-            self.password = data["password"]
         
         except KeyError:
             if "email" in data.keys():
@@ -18,6 +17,9 @@ class CredentialsHelper:
             else: 
                 self.username = ""
                 self.email = ""
+        
+        self.password = data["password"]
+
 
 
     def getUsername(self):
@@ -28,3 +30,11 @@ class CredentialsHelper:
     
     def getPassword(self):
         return self.password
+    
+    def getData(self):
+
+        return {
+            "username": self.getUsername(),
+            "email": self.getEmail(),
+            "password": self.getPassword()
+        }

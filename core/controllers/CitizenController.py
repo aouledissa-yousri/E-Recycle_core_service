@@ -13,6 +13,12 @@ class CitizenController:
     @api_view(["POST"])
     @staticmethod
     def login(request):
-        return JsonResponse(CitizenService.loginGateway(request), safe=False)
+        return JsonResponse(CitizenService.login(request), safe=False)
+    
+
+    @api_view(["PATCH"])
+    @staticmethod
+    def confirmAccount(request):
+        return JsonResponse(CitizenService.confirmAccount(request), safe=False)
     
     

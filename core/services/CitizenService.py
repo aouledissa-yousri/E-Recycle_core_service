@@ -102,24 +102,31 @@ class CitizenService:
         
         
         #if account is not verified send service
-        '''if not user.verified:
-            return CitizenService.sendConfirmationEmail(data, request)'''
+        
         
         return CitizenService.login(data)
                 
         
     
     @staticmethod
-    def login(data):
+    def login(request):
+
+        data = RequestHelper.getRequestBody(request)
 
         try: 
             #search for user in database
             credentials = CredentialsHelper(data)
             account = GenericUser.login(credentials)
+
+
+            #check if user account is not verfied
+            if not account.verified:
+                return CitizenService.sendConfirmationEmail(credentials.getData(), request)
+            
             
 
             #check if username (or email) and password are correct get user data and access token 
-            if account.password == HashHelper.encryptPassword(credentials.password, account.salt) and (not account.isBlocked()):
+            elif account.password == HashHelper.encryptPassword(credentials.password, account.salt) and (not account.isBlocked()):
 
                 #restart login authorized tries
                 account.restartTries()
@@ -127,9 +134,6 @@ class CitizenService:
                 #create session and get citizen additional data
                 return CitizenService.fetchCitizenData(account)
 
-
-            print(HashHelper.encryptPassword(HashHelper.hashPassword(credentials.password), account.salt))
-            print(account.password)
 
             #if password is wrong decrement possible login attempts/tries 
             account.decrementTries()
@@ -159,11 +163,12 @@ class CitizenService:
     def confirmAccount(request):
 
         data = RequestHelper.getRequestBody(request)
-        user = GenericUser.objects.get(username = data["username"])
+        #user = GenericUser.objects.get(username = data["username"])
 
         try:
-            confirmationCode = ConfirmationCode.objects.get(code = data["code"], user_id = user.id)
+            confirmationCode = ConfirmationCode.objects.get(code = data["code"])
             if confirmationCode.expirationDate >= timezone.now():
+                user = GenericUser.objects.get(user_ptr_id = confirmationCode.user.id)
                 user.verify()
                 confirmationCode.delete()
                 return CitizenService.fetchCitizenData(user)
