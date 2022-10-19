@@ -18,5 +18,6 @@ class TwoFactorAuthCode(models.Model):
     def getData(self):
         return {
             "code": self.code, 
-            "user": self.user.id
+            "user": self.user.id,
+            "expirationDate": self.expirationDate
         }

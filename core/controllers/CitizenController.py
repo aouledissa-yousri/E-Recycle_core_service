@@ -45,14 +45,27 @@ class CitizenController:
 
     @api_view(["PATCH"])
     @staticmethod
+    @checkAccessToken
     def enableTwoFactorAuth(request):
         return JsonResponse(CitizenService.manageTwoFactorAuth(request))
     
 
     @api_view(["PATCH"])
+    @checkAccessToken
     @staticmethod
     def disableTwoFactorAuth(request):
         return JsonResponse(CitizenService.manageTwoFactorAuth(request))
+    
+    @api_view(["PATCH"])
+    @staticmethod
+    def twoFactorAuth(request):
+        return JsonResponse(CitizenService.twoFactorAuth(request))
+    
+
+    @api_view(["POST"])
+    @staticmethod
+    def requestPasswordReset(request):
+        return JsonResponse(CitizenService.requestPasswordReset(request))
     
     
     

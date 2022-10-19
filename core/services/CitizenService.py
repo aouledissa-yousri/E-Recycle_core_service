@@ -1,8 +1,8 @@
 from threading import Thread
 from core.models import Citizen
 from core.helpers import RequestHelper, CodeHelper, CredentialsHelper, HashHelper
-from UserManagement.models import GenericUser, ConfirmationCode, User, Token
-from UserManagement.serializers import ConfirmationCodeSerializer
+from UserManagement.models import GenericUser, ConfirmationCode, User, Token, TwoFactorAuthCode, PasswordResetCode
+from UserManagement.serializers import ConfirmationCodeSerializer, TwoFactorAuthCodeSerializer, PasswordResetCodeSerializer
 from UserManagement.Controllers import TokenController
 from Global.settings import EMAIL_HOST_USER
 from django.core.mail import EmailMessage
@@ -43,70 +43,7 @@ class CitizenService:
             citizen.save()
             return "Account created successfully"
                 
-        return result
-
-    
-    @staticmethod 
-    def sendConfirmationEmail(userProfile, request):
-        confirmationCode = CodeHelper.generateCode()
-        message = "Hello "+ userProfile["username"] + ",\nThank you for signining up Here is your confirmation code: "+ confirmationCode
-        
-
-        code = ConfirmationCode()
-        code.setData(confirmationCode, GenericUser.objects.get(username = userProfile["username"]), CodeHelper.generateExpirationDate(request))
-        code = ConfirmationCodeSerializer(data = code.getData())
-
-        if code.is_valid():
-            ConfirmationCode.objects.filter(user_id = GenericUser.objects.get(username = userProfile["username"]).id).delete()
-            code.save()
-            
-            EmailMessage("Email Confirmation", message, EMAIL_HOST_USER, [userProfile["email"]]).send()
-
-            return {"message": "A confirmation code has been sent to your email"}
-
-        return {"message": "Confirmation code has not been sent"}
-    
-
-
-    @staticmethod
-    def loginGateway(request): 
-
-        data = RequestHelper.getRequestBody(request)
-
-        #serch for user and get his email (to send a confirmation code or 2-factor authentication code without reading again from the database)
-        try: 
-            user = GenericUser.objects.get(username = data["username"])
-            data["email"] = user.email
-        
-        #user with corresponding username does not exist
-        except GenericUser.DoesNotExist:
-            return {"message" : "User not found"}
-        
-
-        #if username is not provided
-        except KeyError:
-
-            #check if email is provided by the end-user
-            try: 
-                user = GenericUser.objects.get(email = data["email"])
-                data["username"] = user.username
-
-            #if neither email or username is provided
-            except KeyError: 
-                return {"message": "Invalid username or email"}
-            
-            #user with corresponding email does not exist
-            except GenericUser.DoesNotExist:
-                return {"message" : "User not found"}
-            
-        
-        
-        #if account is not verified send service
-        
-        
-        return CitizenService.login(data)
-                
-        
+        return result    
     
     @staticmethod
     def login(request):
@@ -123,10 +60,14 @@ class CitizenService:
             if not account.verified:
                 return CitizenService.sendConfirmationEmail(credentials.getData(), request)
             
+
+            #check if two factor authentication is enabled
+            if account.twoFactorAuth: 
+                return CitizenService.sendTwoFactorAuthCode(credentials.getData(), request)
             
 
             #check if username (or email) and password are correct get user data and access token 
-            elif account.password == HashHelper.encryptPassword(credentials.password, account.salt) and (not account.isBlocked()):
+            if account.password == HashHelper.encryptPassword(credentials.password, account.salt) and (not account.isBlocked()):
 
                 #restart login authorized tries
                 account.restartTries()
@@ -181,6 +122,7 @@ class CitizenService:
             return {"message": "user not found"}
     
 
+    #logout from all other sessions
     @staticmethod 
     def logoutAllOtherSessions(request):
         decodedToken = TokenController.decodeToken(request.headers["Token"]) 
@@ -194,6 +136,28 @@ class CitizenService:
             return {"message": "user not found"}
 
     
+     
+    @staticmethod 
+    def sendConfirmationEmail(userProfile, request):
+        confirmationCode = CodeHelper.generateCode()
+        message = "Hello "+ userProfile["username"] + ",\nThank you for signining up Here is your confirmation code: "+ confirmationCode
+        
+
+        code = ConfirmationCode()
+        code.setData(confirmationCode, GenericUser.objects.get(username = userProfile["username"]), CodeHelper.generateExpirationDate(request))
+        code = ConfirmationCodeSerializer(data = code.getData())
+
+        if code.is_valid():
+            ConfirmationCode.objects.filter(user_id = GenericUser.objects.get(username = userProfile["username"]).id).delete()
+            code.save()
+            
+            EmailMessage("Email Confirmation", message, EMAIL_HOST_USER, [userProfile["email"]]).send()
+
+            return {"message": "A confirmation code has been sent to your email"}
+
+        return {"message": "Confirmation code has not been sent"}
+
+
 
     @staticmethod
     def confirmAccount(request):
@@ -237,6 +201,52 @@ class CitizenService:
         
         except KeyError: 
             return {"message": "Invalid parameters"}
+
+
+    
+    #send two factor authentication code to the user's email address
+    @staticmethod 
+    def sendTwoFactorAuthCode(userProfile, request):
+        twoFactorAuthCode = CodeHelper.generateCode()
+        message = "Hello "+ userProfile["username"] + ",\nHere is your 2-step verification code : "+ twoFactorAuthCode
+
+        twoFactorCode = TwoFactorAuthCode()
+        twoFactorCode.setData(twoFactorAuthCode, GenericUser.objects.get(username = userProfile["username"]), CodeHelper.generateExpirationDate(request))
+        print(twoFactorCode.getData())
+        twoFactorCode = TwoFactorAuthCodeSerializer(data = twoFactorCode.getData())
+
+        if twoFactorCode.is_valid():
+
+            TwoFactorAuthCode.objects.filter(user_id = GenericUser.objects.get(username = userProfile["username"]).id).delete()
+            twoFactorCode.save()
+            EmailMessage("2-Step verification code", message, EMAIL_HOST_USER, [userProfile["email"]]).send()
+                
+            return {"message": "Verification code has been sent to your email address"}
+
+        return {"message": "Verification code has not been sent"}
+    
+
+    #login with 2 factor authentication code
+    @staticmethod
+    def twoFactorAuth(request):
+
+        data = RequestHelper.getRequestBody(request)
+
+        try:
+            twoFactorAuthCode = TwoFactorAuthCode.objects.get(code = data["code"])
+            if twoFactorAuthCode.expirationDate >= timezone.now():
+                user = GenericUser.objects.get(user_ptr_id = twoFactorAuthCode.user.id)
+                user.verify()
+                twoFactorAuthCode.delete()
+                return CitizenService.fetchCitizenData(user)
+
+            return {"message": "Confirmation code has been expired"}
+
+        except TwoFactorAuthCode.DoesNotExist:
+            return {"message": "Confirmation code is not valid"}
+        
+        except KeyError: 
+            return {"message": "Invalid parameters"}
     
     
 
@@ -275,6 +285,40 @@ class CitizenService:
 
         return token
     
-    
+
+
+    @staticmethod
+    def requestPasswordReset(request):
+        userProfile = RequestHelper.getRequestBody(request)
+
+        if userProfile.get("username"):
+            user = GenericUser.objects.get(username=userProfile["username"]).getData()
+        elif userProfile.get("email"):
+            user = GenericUser.objects.get(username=userProfile["email"]).getData()
+        else: 
+            return {"message": "Invalid parameters"}
         
 
+        return CitizenService.sendPasswordResetCode(user, request)
+        
+
+
+    @staticmethod 
+    def sendPasswordResetCode(userProfile, request):
+        passwordResetCode = CodeHelper.generateCode()
+        message = "Hello "+ userProfile["username"] + ",\n Here is your password reset code : "+ passwordResetCode
+
+        passwordReset = PasswordResetCode()
+        passwordReset.setData(passwordResetCode, GenericUser.objects.get(username = userProfile["username"]), CodeHelper.generateExpirationDate(request))
+        passwordReset = PasswordResetCodeSerializer(data = passwordReset.getData())
+
+
+        if passwordReset.is_valid():
+            PasswordResetCode.objects.filter(user_id = GenericUser.objects.get(username = userProfile["username"]).id).delete()
+            passwordReset.save()        
+
+            EmailMessage("Password Reset Code", message, EMAIL_HOST_USER, [userProfile["email"]]).send()
+                
+            return {"message": "Passoword reset code has been sent"}
+
+        return {"message": "Password reset code has not been sent"}
