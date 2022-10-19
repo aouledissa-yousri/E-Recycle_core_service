@@ -7,6 +7,7 @@ urlpatterns = [
 
     #citizen paths
     path("signUp/", CitizenController.signUp),
+    path("login/", CitizenController.login),
 
 
 

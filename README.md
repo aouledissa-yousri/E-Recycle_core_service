@@ -3,7 +3,7 @@
 Web service that holds all the core functionalities of the "E-Recycle" information system and manages direct database access
 
 
-# Install 
+## Install 
 
 1. git clone https://github.com/aouledissa-yousri/E-Recycle_core_service
 
@@ -15,7 +15,7 @@ Web service that holds all the core functionalities of the "E-Recycle" informati
 
 
 
-# Activate virtual environment to run server
+## Activate virtual environment to run server
 
 1. Linux (any distro): 
 
@@ -25,12 +25,12 @@ Web service that holds all the core functionalities of the "E-Recycle" informati
 
     2.1. %cd%\Scripts\activate
 
-# Run django server 
+## Run django server 
 
 1. python manage-py runserver <port-number (optional)>
 
 
-# Deactivate virtual environment
+## Deactivate virtual environment
 
 1. deactivate (command works in all operating systems)
 

@@ -43,9 +43,6 @@ class GenericUserController:
             #serach for user in database 
             credentials = Credentials(data, passwordFromUser)
             account = GenericUser.login(credentials)
-            print(data["password"])
-            print("credentials password: " + credentials.password)
-            print("account password: " + account.password)
 
             #if username (or email) and password are correct get user data and access token 
             if account.password == credentials.getPassword() and (not account.isBlocked()):
@@ -184,7 +181,6 @@ class GenericUserController:
             if confirmationCode.expirationDate >= timezone.now():
                 user.verify()
                 confirmationCode.delete()
-                print("user password :"+ user.getAllUserData()["password"])
                 return GenericUserController.login(user.getAllUserData(), passwordFromUser = False)
             return {"message": "Confirmation code has been expired"}
 
