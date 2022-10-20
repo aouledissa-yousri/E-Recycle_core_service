@@ -27,6 +27,7 @@ class RecycleRequest(models.Model):
     
 
     def getData(self):
+        
         return {
             "citizen": self.citizen,
             "material": self.material,
