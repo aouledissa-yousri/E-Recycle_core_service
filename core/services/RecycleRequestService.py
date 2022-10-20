@@ -1,5 +1,6 @@
 from core.helpers import RequestHelper
 from core.models import RecycleRequest, Citizen, Material
+from UserManagement.Controllers import TokenController
 
 
 class RecycleRequestService: 
@@ -11,7 +12,7 @@ class RecycleRequestService:
 
         try: 
             recycleRequest = RecycleRequest()
-            recycleRequest.setData(recycleRequestData)
+            recycleRequest.setData(recycleRequestData, request)
             recycleRequest.save()
 
             return {"message": "recycle request has been successfully submitted" }
@@ -36,3 +37,13 @@ class RecycleRequestService:
         
         except RecycleRequest.DoesNotExist:
             return {"message": "Recycle Request not found"}
+    
+
+    def getRecycleRequests(request):
+        try:
+            recycleRequests = RecycleRequest.objects.filter(citizen_id = Citizen.objects.get(user_id = TokenController.decodeToken(request.headers["Token"])["id"]).id)
+            recycleRequestsData = [recycleRequest.getData() for recycleRequest in recycleRequests]
+            return recycleRequestsData
+        
+        except RecycleRequest.DoesNotExist:
+            return {"message": "You didn't make any recycle requests"}

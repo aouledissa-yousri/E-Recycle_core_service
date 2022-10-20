@@ -43,6 +43,7 @@ urlpatterns = [
 
 
     #recycle request paths
-    path("makeRecycleRequest", RecycleRequestController.makeRecycleRequest),
-    path("withdrawRecycleRequest", RecycleRequestController.withdrawRecycleRequest)
+    path("makeRecycleRequest/", RecycleRequestController.makeRecycleRequest),
+    path("withdrawRecycleRequest/", RecycleRequestController.withdrawRecycleRequest),
+    path("getRecycleRequests/", RecycleRequestController.getRecycleRequests)
 ]

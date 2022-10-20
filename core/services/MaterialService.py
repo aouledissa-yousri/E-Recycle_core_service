@@ -20,10 +20,7 @@ class MaterialService(object):
 
     @staticmethod
     def getMaterials(request):
-        materialData = []
         materials = Material.objects.all()
-        for material in materials:
-            materialData.append(material.getData())
-
+        materialData = [material.getData() for material in materials]
         return materialData
         

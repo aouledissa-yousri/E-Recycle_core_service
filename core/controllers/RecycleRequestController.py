@@ -13,9 +13,16 @@ class RecycleRequestController:
         return JsonResponse(RecycleRequestService.makeRecycleRequest(request))
     
 
-    @api_view(["POST"])
+    @api_view(["DELETE"])
     @staticmethod
     @checkAccessToken
     def withdrawRecycleRequest(request):
         return JsonResponse(RecycleRequestService.withdrawRecycleRequest(request))
+    
+
+    @api_view(["GET"])
+    @staticmethod
+    @checkAccessToken
+    def getRecycleRequests(request):
+        return JsonResponse(RecycleRequestService.getRecycleRequests(request), safe = False)
     
