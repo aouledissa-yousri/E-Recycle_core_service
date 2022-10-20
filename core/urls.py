@@ -1,5 +1,5 @@
 from django.urls import path
-from .controllers import *
+from core.controllers import *
 
 
 
@@ -30,5 +30,18 @@ urlpatterns = [
     path("googleLogin/", CitizenController.googleLogin),
 
     path("facebookLoginGateway/", CitizenController.facebookLoginGateway),
-    path("facebookLogin/", CitizenController.facebookLogin)
+    path("facebookLogin/", CitizenController.facebookLogin),
+
+
+
+
+
+    #material paths
+    path("addMaterial/", MaterialController.addMaterial),
+
+
+
+    #recycle request paths
+    path("makeRecycleRequest", RecycleRequestController.makeRecycleRequest),
+    path("withdrawRecycleRequest", RecycleRequestController.withdrawRecycleRequest)
 ]

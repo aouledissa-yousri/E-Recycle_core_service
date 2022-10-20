@@ -1,2 +1,3 @@
 from .MaterialService import MaterialService
 from .CitizenService import CitizenService
+from .RecycleRequestService import RecycleRequestService
