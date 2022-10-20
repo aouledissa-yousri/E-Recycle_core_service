@@ -10,9 +10,12 @@ class CredentialsHelper:
         except KeyError:
             if "email" in data.keys():
                 self.username = GenericUser.objects.get(email = data["email"]).username
+                self.email = data["email"]
+
 
             elif "username" in data.keys(): 
                 self.email = GenericUser.objects.get(username = data["username"]).email
+                self.username = data["username"]
 
             else: 
                 self.username = ""
