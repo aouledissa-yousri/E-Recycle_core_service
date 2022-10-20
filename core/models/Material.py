@@ -8,6 +8,7 @@ class Material(models.Model):
 
     def getData(self):
         return {
+            "id": self.id,
             "type": self.type
         }
     

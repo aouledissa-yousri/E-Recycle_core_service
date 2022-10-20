@@ -38,6 +38,7 @@ urlpatterns = [
 
     #material paths
     path("addMaterial/", MaterialController.addMaterial),
+    path("getMaterials/", MaterialController.getMaterials),
 
 
 

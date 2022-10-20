@@ -15,4 +15,15 @@ class MaterialService(object):
         material.save()
 
         return "Material has been added"
+    
+
+
+    @staticmethod
+    def getMaterials(request):
+        materialData = []
+        materials = Material.objects.all()
+        for material in materials:
+            materialData.append(material.getData())
+
+        return materialData
         
