@@ -100,7 +100,7 @@ class CitizenController:
 
     @api_view(["GET"])
     def facebookLogin(request):
-        return CitizenService.facebookLogin(request)
+        return JsonResponse(CitizenService.facebookLogin(request))
     
     
     

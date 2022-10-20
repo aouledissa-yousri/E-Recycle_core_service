@@ -46,7 +46,7 @@ class FacebookUserController:
 
         #get authorization code from authorization url
         FacebookUserController.authCode = request.build_absolute_uri().split("?")[1].split("&")[0].split("=")[1]
-        return redirect("/core/facebookLogin/")
+        return FacebookUserController.facebookLogin(request)
     
 
     @staticmethod 
@@ -84,16 +84,16 @@ class FacebookUserController:
                 #saving session token to database 
                 TokenController.saveToken(token, facebookUser)
 
-                return JsonResponse({
+                return {
                     "message": "success",
                     "user": facebookUser.getData(),
                     "token": token
-                })
+                }
             
 
         #get access token after exchanging it with auth code 
         elif FacebookUserController.authCode != "":
-            return FacebookUserController.getAccessToken()
+            return FacebookUserController.getAccessToken(request)
         
         #get authorization code
         else: 
@@ -103,7 +103,7 @@ class FacebookUserController:
 
 
     @staticmethod
-    def getAccessToken():
+    def getAccessToken(request):
 
         #prepare access token exchange url
         access_token_url = ''.join(
@@ -133,7 +133,7 @@ class FacebookUserController:
         FacebookUserController.authCode = "Exchanged"
 
 
-        return redirect("/core/facebookLogin/")
+        return FacebookUserController.facebookLogin(request)
 
        
 
