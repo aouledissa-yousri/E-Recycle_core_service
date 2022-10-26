@@ -1,9 +1,11 @@
-FROM python:3.10.5
+FROM python:3.10.7
 
 WORKDIR /e-recycle-core 
 
 COPY . . 
 
+RUN pip install requirements.txt
+
 EXPOSE 8000 
 
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["python", "manage.py", "runserver"]

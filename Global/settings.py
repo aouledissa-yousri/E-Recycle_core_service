@@ -28,7 +28,11 @@ SECRET_KEY = 'django-insecure--x3s$i$^dhhpjj^dexme7bggvng3)=c53pqv)5gqh(4uxu1xy1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "e-recyclecoreservice-production.up.railway.app"
+]
 
 
 # Application definition
