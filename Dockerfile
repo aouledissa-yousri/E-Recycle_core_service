@@ -4,7 +4,7 @@ WORKDIR /e-recycle-core
 
 COPY . . 
 
-RUN pip install requirements.txt
+RUN pip install -r requirements.txt
 
 EXPOSE 8000 
 
