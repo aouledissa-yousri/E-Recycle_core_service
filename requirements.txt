@@ -1,10 +1,10 @@
-//Authlib==1.0.1
+Authlib==1.0.1
 Cython==0.29.32
-//Django==4.0.4
-//django-cors-headers==3.13.0
-//djangorestframework==3.14.0
-//google-auth==2.13.0
-//google-auth-oauthlib==0.5.3
+Django==4.0.4
+django-cors-headers==3.13.0
+djangorestframework==3.14.0
+google-auth==2.13.0
+google-auth-oauthlib==0.5.3
 jsonpointer==2.3
 jsonschema==4.7.2
 oauthlib==3.2.2
