@@ -6,10 +6,11 @@ import jwt
 
 #check if access token is valid or not when making a post request to the server
 def checkAccessToken(func, algorithm="HS512"):
-    
+
     def wrapper(request, *args, **kwargs):
         try: 
             _token = request.headers["Token"]
+
             try:
                 jwt.decode(_token, SECRET_KEY, algorithms = [algorithm])
 

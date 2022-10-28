@@ -241,10 +241,10 @@ class CitizenService:
                 twoFactorAuthCode.delete()
                 return CitizenService.fetchCitizenData(user)
 
-            return {"message": "Confirmation code has been expired"}
+            return {"message": "2 factor auth code has been expired"}
 
         except TwoFactorAuthCode.DoesNotExist:
-            return {"message": "Confirmation code is not valid"}
+            return {"message": "2 factor auth code is not valid"}
         
         except KeyError: 
             return {"message": "Invalid parameters"}
