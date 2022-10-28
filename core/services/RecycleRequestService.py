@@ -43,7 +43,10 @@ class RecycleRequestService:
         try:
             recycleRequests = RecycleRequest.objects.filter(citizen_id = Citizen.objects.get(user_id = TokenController.decodeToken(request.headers["Token"])["id"]).id)
             recycleRequestsData = [recycleRequest.getData() for recycleRequest in recycleRequests]
-            return recycleRequestsData
+            return {
+                "message": "success",
+                "recycleRequests": recycleRequestsData
+            }
         
         except RecycleRequest.DoesNotExist:
             return {"message": "You didn't make any recycle requests"}
