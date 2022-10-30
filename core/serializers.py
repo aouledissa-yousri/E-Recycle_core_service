@@ -1,9 +1,15 @@
 from rest_framework import serializers 
-from .models import Citizen, Material
+from .models import Citizen, Material,Collector
 
 class CitizenSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Citizen
+        fields = "__all__"
+
+
+class CollectorSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = Collector
         fields = "__all__"
 
 

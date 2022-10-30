@@ -32,6 +32,33 @@ urlpatterns = [
     path("facebookLoginGateway/", CitizenController.facebookLoginGateway),
     path("facebookLogin/", CitizenController.facebookLogin),
 
+    #collector paths 
+    path("collectorSignUp/", CollectorController.signUp),
+
+    path("collectorLogin/", CollectorController.login),
+    path("collectorLogout/", CollectorController.logout),
+    path("collectorLogoutAllSessions/", CollectorController.logoutAllSessions),
+    path("collectorLogoutAllOtherSessions/", CollectorController.logoutAllOtherSessions),
+
+    path("collectorconfirmAccount/", CollectorController.confirmAccount),
+
+    path("collectorEnableTwoFactorAuth/", CollectorController.enableTwoFactorAuth),
+    path("collectorDisableTwoFactorAuth/", CollectorController.disableTwoFactorAuth),
+    path("collectorTwoFactorAuth/", CollectorController.twoFactorAuth),
+
+
+    path("collectorRequestPasswordReset/", CollectorController.requestPasswordReset),
+    path("collectorCheckPasswordResetCode/", CollectorController.checkPasswordResetCode),
+    path("collectorResetPassword/", CollectorController.resetPassword),
+    path("collectorChangePassword/", CollectorController.changePassword),
+
+
+    path("collectorGoogleLoginGateway/", CollectorController.googleLoginGateway),
+    path("collectorGoogleLogin/", CollectorController.googleLogin),
+
+    path("collectorFacebookLoginGateway/", CollectorController.facebookLoginGateway),
+    path("collectorFacebookLogin/", CollectorController.facebookLogin),
+
 
 
 
@@ -44,6 +71,8 @@ urlpatterns = [
 
     #recycle request paths
     path("makeRecycleRequest/", RecycleRequestController.makeRecycleRequest),
+    path("reserveRecycleRequest/", RecycleRequestController.reserveRecycleRequest),
+
     path("withdrawRecycleRequest/", RecycleRequestController.withdrawRecycleRequest),
     path("getRecycleRequests/", RecycleRequestController.getRecycleRequests)
 ]

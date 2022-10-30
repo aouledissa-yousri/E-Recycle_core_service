@@ -1,7 +1,9 @@
+from email.policy import default
 from django.db import models 
 from django.utils import timezone
 from .Citizen import Citizen
 from .Material import Material
+from .Collector import Collector
 from UserManagement.Controllers import TokenController
 
 
@@ -15,6 +17,7 @@ class RecycleRequest(models.Model):
     location = models.CharField(max_length = 255, default = '')
     dateSubmitted = models.DateTimeField(default = timezone.now())
     status = models.CharField(max_length = 255, default = '')
+    Collector = models.ForeignKey(Collector, on_delete=models.CASCADE, null =True)
 
 
     def setData(self, materialData, request):
@@ -25,6 +28,9 @@ class RecycleRequest(models.Model):
         self.location = materialData["location"]
         self.dateSubmitted = materialData["dateSubmitted"]
         self.status = "pending"
+    
+    def changeStatus(self,status):
+        self.status=status
     
 
     def getData(self):

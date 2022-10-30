@@ -1,6 +1,7 @@
 from core.helpers import RequestHelper
 from core.models import RecycleRequest, Citizen, Material
 from UserManagement.Controllers import TokenController
+from core.models.Collector import Collector
 
 
 class RecycleRequestService: 
@@ -47,3 +48,22 @@ class RecycleRequestService:
         
         except RecycleRequest.DoesNotExist:
             return {"message": "You didn't make any recycle requests"}
+
+    
+    @staticmethod
+    def reserveRecycleRequest(request):
+        recycleRequestData = RequestHelper.getRequestBody(request)
+        recycleRequest = RecycleRequest.objects.get(id = recycleRequestData["id"])
+        if recycleRequest.Collector ==0:
+
+            recycleRequest.Collector = Collector.objects.get(user_id = TokenController.decodeToken(request.headers["Token"])["id"])
+            recycleRequest.changeStatus('reserved')
+            recycleRequest.save()
+            return {"message": "recycle request has been successfully reserved" }
+        else:
+            return {"message": "recycle request has been already reserved" }
+
+
+    
+
+
