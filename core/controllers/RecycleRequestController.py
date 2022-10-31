@@ -25,7 +25,16 @@ class RecycleRequestController:
     @checkAccessToken
     def reserveRecycleRequest(request):
         return JsonResponse(RecycleRequestService.reserveRecycleRequest(request))
-    
+
+
+    @api_view(["POST"])
+    @staticmethod
+    @checkAccessToken
+    def submitRecycleRequest(request):
+        return JsonResponse(RecycleRequestService.submitRecycleRequest(request))
+
+
+
 
     @api_view(["GET"])
     @staticmethod

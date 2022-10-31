@@ -62,6 +62,21 @@ class RecycleRequestService:
             return {"message": "recycle request has been successfully reserved" }
         else:
             return {"message": "recycle request has been already reserved" }
+    
+
+
+    
+
+    @staticmethod
+    def submitRecycleRequest(request):
+        recycleRequestData = RequestHelper.getRequestBody(request)
+        recycleRequest = RecycleRequest.objects.get(id = recycleRequestData["id"])
+        recycleRequest.changeStatus('submitted')
+        recycleRequest.save()
+        return {'message': 'recycle request has been submitted'}
+
+
+
 
 
     
